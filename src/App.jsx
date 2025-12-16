@@ -4,50 +4,36 @@ import {useEffect, useState} from "react";
 import Spinner from "./components/Spinner.jsx";
 import MovieCard from "./components/MovieCard.jsx";
 import {useDebounce} from "react-use";
+import {fetchMovies} from "./api/tmdb.js";
 
-const API_BASE_URL = 'https://api.themoviedb.org/3'
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY
-const API_OPTIONS = {
-    method: 'GET', headers: {
-        accept: 'application/json', authorization: `Bearer ${API_KEY}`,
-    }
-}
 
 function App() {
-
     const [searchTerm, setSearchTerm] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [movies, setMovies] = useState([])
     const [loading, setLoading] = useState(false)
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
 
-    useDebounce(() =>setDebouncedSearchTerm(debouncedSearchTerm), 500, [searchTerm])
+    useDebounce(() =>setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
-    const fetchMovies = async (query = '') => {
-        try {
-            setLoading(true)
-            setErrorMessage('')
-            const endpoint = query ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}` : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
-
-            const response = await fetch(endpoint, API_OPTIONS)
-            if (!response.ok) {
-                throw Error("Failed to fetch movies from API")
+    useEffect(() => {
+        const loadMovies = async () => {
+            try {
+                setLoading(true)
+                setErrorMessage('')
+                const results = await fetchMovies(debouncedSearchTerm)
+                setMovies(results)
+            } catch (error) {
+                console.log("Error fetching movies", error)
+                setErrorMessage('Error fetching movies please try again later')
+            } finally {
+                setLoading(false)
             }
-            const data = await response.json()
-
-            if (data.response === "False") {
-                setErrorMessage(data.error || "Failed to fetch movies from API")
-                setMovies([])
-                return
-            }
-            setMovies(data.results || [])
-        } catch (error) {
-            console.log("Error fetching movies ", error)
-            setErrorMessage("Error fetching movies please try again later")
-        } finally {
-            setLoading(false)
         }
-    }
+
+        loadMovies()
+    }, [debouncedSearchTerm])
+
     useEffect(() => {
         fetchMovies(debouncedSearchTerm)
     }, [debouncedSearchTerm]);
