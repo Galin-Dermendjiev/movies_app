@@ -23,6 +23,7 @@ function App() {
                 setErrorMessage('')
                 const results = await fetchMovies(debouncedSearchTerm)
                 setMovies(results)
+
             } catch (error) {
                 console.log("Error fetching movies", error)
                 setErrorMessage('Error fetching movies please try again later')
@@ -34,9 +35,6 @@ function App() {
         loadMovies()
     }, [debouncedSearchTerm])
 
-    useEffect(() => {
-        fetchMovies(debouncedSearchTerm)
-    }, [debouncedSearchTerm]);
     return (<main>
         <div className="pattern"/>
         <div className="wrapper">
