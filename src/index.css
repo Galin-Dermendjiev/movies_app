@@ -166,6 +166,10 @@
         @apply text-white pb-20;
     }
 
+    .home-button {
+        @apply inline-block mb-4 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-md font-semibold transition;
+    }
+
     .movie-backdrop {
         @apply relative w-full h-96 sm:h-[500px] rounded-lg bg-cover bg-center;
     }

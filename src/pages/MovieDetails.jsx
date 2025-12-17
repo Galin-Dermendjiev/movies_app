@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchMovieById } from "../api/tmdb.js";
 import Spinner from "../components/Spinner.jsx";
+import {Link} from "react-router-dom";
 
 const MovieDetails = () => {
     const { id } = useParams();
@@ -27,6 +28,13 @@ const MovieDetails = () => {
 
     return (
         <div className="movie-details">
+            {/* Back to Home button */}
+            <div className="mt-4 max-w-6xl mx-auto px-4 md:px-0">
+                <Link to="/" className="home-button">
+                    ← Back to Home
+                </Link>
+
+            </div>
             {/* Backdrop */}
             <div
                 className="movie-backdrop"
