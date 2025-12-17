@@ -5,6 +5,7 @@ import MovieCard from "../components/MovieCard.jsx";
 import {useDebounce} from "react-use";
 import {getTrendingMovies} from "../appwrite.js";
 import {fetchMovies} from "../api/tmdb.js";
+import {Link} from "react-router-dom";
 
 
 function Home() {
@@ -60,7 +61,9 @@ function Home() {
                         {trendingMovies.map((movie, index) => (
                             <li key={movie.$id}>
                                 <p> {index + 1}</p>
-                                <img src={movie.poster_url} alt={movie.title} />
+                                <Link to={`/movie/${movie.movie_id}`}>
+                                    <img src={movie.poster_url} alt={movie.title}/>
+                                </Link>
                             </li>
                         ))}
                     </ul>
