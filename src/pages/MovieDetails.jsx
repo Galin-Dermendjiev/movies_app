@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchMovieById } from "../api/tmdb.js";
+import {fetchMovieById, fetchSimilarMovies} from "../api/tmdb.js";
 import Spinner from "../components/Spinner.jsx";
 import {Link} from "react-router-dom";
+import MovieCard from "../components/MovieCard.jsx";
 
 const MovieDetails = () => {
     const { id } = useParams();
     const [movie, setMovie] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const [similarMovies, setSimilarMovies] = useState([]);
+    const [loadingSimilarMovies, setLoadingSimilarMovies] = useState(false);
 
     useEffect(() => {
         const loadMovie = async () => {
@@ -21,7 +25,22 @@ const MovieDetails = () => {
                 setLoading(false);
             }
         };
+
+        const loadSimilarMovies = async () => {
+            try {
+                setLoadingSimilarMovies(true);
+                const data = await fetchSimilarMovies(id)
+                setSimilarMovies(data);
+                console.log(data);
+            } catch (error) {
+                console.error("Failed to fetch similar movies", error);
+            } finally {
+                setLoadingSimilarMovies(false);
+            }
+        }
+
         loadMovie();
+        loadSimilarMovies();
     }, [id]);
 
     if (loading) return <Spinner />;
@@ -125,6 +144,29 @@ const MovieDetails = () => {
                     )}
                 </div>
             </div>
+
+            {/* Similar Movies */}
+            {similarMovies?.length > 0 && (
+                <section className="mt-16">
+                    <div className="mx-auto max-w-[75%]">
+                        <h2 className="mb-6">Similar Movies</h2>
+
+                        <ul className="flex gap-5 overflow-x-auto pb-6 hide-scrollbar">
+                            {similarMovies.map(movie => (
+                                <li
+                                    key={movie.id}
+                                    className="min-w-[220px] max-w-[220px] shrink-0"
+                                >
+                                    <MovieCard movie={movie} />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </section>
+            )}
+
+
+
         </div>
     );
 };

@@ -43,6 +43,25 @@ export const fetchMovieById = async (id) => {
     }
 
     const data = await response.json()
-
     return data || []
+}
+
+export const fetchSimilarMovies = async (id) => {
+    const movie = await fetchMovieById(id)
+    const genreIds = movie.genres.map(g => g.id).join(',')
+
+    const year = new Date(movie.release_date).getFullYear()
+
+    const endpoint = `${API_BASE_URL}/discover/movie?` +
+        `with_genres=${genreIds}` +
+        `&primary_release_date.gte=${year - 5}-01-01` +
+        `&primary_release_date.lte=${year + 1}-12-31` +
+        `&sort_by=popularity.desc` +
+        `&vote_count.gte=100` +
+        `&without_movies=${movie.id}`
+
+    const response = await fetch(endpoint, API_OPTIONS)
+    const data = await response.json()
+
+    return data.results || []
 }
