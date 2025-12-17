@@ -105,7 +105,11 @@
         @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10;
 
         & img {
-            @apply rounded-lg h-auto w-full;
+            @apply rounded-lg h-auto w-full transition-transform duration-300 ease-in-out;
+        }
+
+        & img:hover {
+            @apply scale-110 -translate-y-2;
         }
 
         & h3 {
@@ -162,6 +166,14 @@
 }
 
 @layer utilities {
+    .scale {
+        @apply rounded-lg transition-transform duration-300 ease-in-out;
+    }
+
+    .scale:hover {
+        @apply scale-110 -translate-y-1;
+    }
+
     .movie-details {
         @apply text-white pb-20;
     }

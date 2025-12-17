@@ -62,7 +62,7 @@ function Home() {
                             <li key={movie.$id}>
                                 <p> {index + 1}</p>
                                 <Link to={`/movie/${movie.movie_id}`}>
-                                    <img src={movie.poster_url} alt={movie.title}/>
+                                    <img src={movie.poster_url} alt={movie.title} className='scale'/>
                                 </Link>
                             </li>
                         ))}
