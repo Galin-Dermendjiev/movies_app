@@ -6,6 +6,7 @@ import {useDebounce} from "react-use";
 import {getTrendingMovies} from "../appwrite.js";
 import {fetchMovies} from "../api/tmdb.js";
 import {Link} from "react-router-dom";
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 
 function Home() {
@@ -98,22 +99,21 @@ function Home() {
                 {initialLoading && <Spinner/>}
                 {!initialLoading && errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
-                <ul>
-                    {movies.map(movie => (
-                        <MovieCard movie={movie} key={movie.id}/>
-                    ))}
-                </ul>
-
-                {loadingMore && <Spinner/>}
-
-                {!initialLoading && (
-                    <button
-                        className='home-button mt-10'
-                        onClick={() => setPage(prev => prev + 1)}
-                        disabled={loadingMore}
+                {!initialLoading && !errorMessage && (
+                    <InfiniteScroll
+                        dataLength={movies.length}
+                        next={() => setPage(prev => prev + 1)}
+                        hasMore={true} // or calculate based on total pages
+                        loader={<Spinner />}
+                        scrollThreshold={0.8} // trigger at 80% of scroll
+                        style={{ overflow: "hidden" }}
                     >
-                        {loadingMore ? 'Loading...' : 'Load more'}
-                    </button>
+                        <ul>
+                            {movies.map(movie => (
+                                <MovieCard movie={movie} key={movie.id}/>
+                            ))}
+                        </ul>
+                    </InfiniteScroll>
                 )}
             </section>
         </div>
