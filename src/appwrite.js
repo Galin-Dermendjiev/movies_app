@@ -10,7 +10,6 @@ const client = new Client().setEndpoint(APPWRITE_ENDPOINT).setProject(PROJECT_ID
 const tables = new TablesDB(client)
 
 export const updateSearchCount = async ({searchTerm, movie}) => {
-    console.log(movie)
     try {
         const result = await tables.listRows({
             databaseId: DATABASE_ID, tableId: TABLE_ID, queries: [

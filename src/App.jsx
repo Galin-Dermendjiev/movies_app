@@ -1,81 +1,15 @@
-import './App.css'
-import Search from "./components/Search.jsx";
-import {useEffect, useState} from "react";
-import Spinner from "./components/Spinner.jsx";
-import MovieCard from "./components/MovieCard.jsx";
-import {useDebounce} from "react-use";
-import {fetchMovies} from "./api/tmdb.js";
-import {getTrendingMovies} from "./appwrite.js";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
 
 
 function App() {
-    const [searchTerm, setSearchTerm] = useState('')
-    const [errorMessage, setErrorMessage] = useState('')
-    const [movies, setMovies] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-    const [trendingMovies, setTrendingMovies] = useState([])
-
-    useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
-
-    useEffect(() => {
-        const loadTrending = async () => {
-            const popularMovies = await getTrendingMovies();
-            setTrendingMovies(popularMovies);
-        };
-
-        loadTrending();
-    }, []);
-
-    useEffect(() => {
-        const loadMovies = async () => {
-            try {
-                setLoading(true)
-                setErrorMessage('')
-                const results = await fetchMovies(debouncedSearchTerm)
-                setMovies(results)
-            } catch (error) {
-                console.log("Error fetching movies", error)
-                setErrorMessage('Error fetching movies please try again later')
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        loadMovies()
-    }, [debouncedSearchTerm])
-
-    return (<main>
-        <div className="pattern"/>
-        <div className="wrapper">
-            <header>
-                <img src='../public/hero-img.png' alt='hero'/>
-                <h1>Find <span className="text-gradient">movies</span> you'll enjoy fast and easy</h1>
-                <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
-            </header>
-
-            {trendingMovies.length > 0 && (
-                <section className="trending">
-                    <h2>Trending Movies</h2>
-                    <ul>
-                        {trendingMovies.map((movie, index) => (
-                            <li key={movie.$id}>
-                                <p> {index + 1}</p>
-                                <img src={movie.poster_url} alt={movie.title} />
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            )}
-
-            <section className="all-movies">
-                <h2 className='mt-[40px]'>All movies</h2>
-                {loading ? (<Spinner/>) : errorMessage ? (<p className="text-red-500">{errorMessage}</p>) : (<ul>
-                    {movies.map(movie => (<MovieCard movie={movie} key={movie.id}/>))}
-                </ul>)}
-            </section>
-        </div>
-    </main>)
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Home />} />
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
-export default App
+export default App;

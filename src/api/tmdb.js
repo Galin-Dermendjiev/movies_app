@@ -29,3 +29,16 @@ export const fetchMovies = async (query = '') => {
     }
     return data.results || []
 }
+
+export const fetchMovieById = async (id) => {
+    const endpoint = `${API_BASE_URL}/movie/${id}`
+
+    const response = await fetch(endpoint, API_OPTIONS)
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch movie by id')
+    }
+
+    const data = await response.json()
+    return data.results || []
+}
