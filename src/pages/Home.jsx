@@ -1,12 +1,10 @@
 import Search from "../components/Search.jsx";
 import {useEffect, useState} from "react";
-import Spinner from "../components/Spinner.jsx";
-import MovieCard from "../components/MovieCard.jsx";
 import {useDebounce} from "react-use";
 import {getTrendingMovies} from "../appwrite.js";
 import {fetchMovies} from "../api/tmdb.js";
-import {Link} from "react-router-dom";
-import InfiniteScroll from 'react-infinite-scroll-component';
+import TrendingMovies from "../components/TrendingMovies.jsx";
+import AllMovies from "../components/AllMovies.jsx";
 
 
 function Home() {
@@ -81,45 +79,14 @@ function Home() {
                 <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
             </header>
 
-            {trendingMovies.length > 0 && (
-                <section className="trending">
-                    <h2>Trending Movies</h2>
-                    <ul>
-                        {trendingMovies.map((movie, index) => (
-                            <li key={movie.$id}>
-                                <p> {index + 1}</p>
-                                <Link to={`/movie/${movie.movie_id}`}>
-                                    <img src={movie.poster_url} alt={movie.title} className='scale'/>
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            )}
+            <TrendingMovies trendingMovies={trendingMovies}/>
 
-            <section className="all-movies">
-                <h2 className='mt-[40px]'>All movies</h2>
-
-                {initialLoading && <Spinner/>}
-                {!initialLoading && errorMessage && <p className="text-red-500">{errorMessage}</p>}
-
-                {!initialLoading && !errorMessage && (
-                    <InfiniteScroll
-                        dataLength={movies.length}
-                        next={() => setPage(prev => prev + 1)}
-                        hasMore={page < totalPages} // or calculate based on total pages
-                        loader={<Spinner />}
-                        scrollThreshold={0.8} // trigger at 80% of scroll
-                        style={{ overflow: "hidden" }}
-                    >
-                        <ul>
-                            {movies.map(movie => (
-                                <MovieCard movie={movie} key={movie.id}/>
-                            ))}
-                        </ul>
-                    </InfiniteScroll>
-                )}
-            </section>
+            <AllMovies movies={movies}
+                       page={page}
+                       setPage={setPage}
+                       totalPages={totalPages}
+                       errorMessage={errorMessage}
+                       initialLoading={initialLoading}/>
         </div>
     </main>)
 }
