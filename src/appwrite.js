@@ -10,6 +10,7 @@ const client = new Client().setEndpoint(APPWRITE_ENDPOINT).setProject(PROJECT_ID
 const tables = new TablesDB(client)
 
 export const updateSearchCount = async ({searchTerm, movie}) => {
+    console.log(movie)
     try {
         const result = await tables.listRows({
             databaseId: DATABASE_ID, tableId: TABLE_ID, queries: [
@@ -30,10 +31,22 @@ export const updateSearchCount = async ({searchTerm, movie}) => {
                     searchTerm,
                     count: 1,
                     movie_id: movie.id,
-                    poster_url: `https://image.tmdb.org/t/p/w500/${movie.poster_url}`,
+                    poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
                 }
             })
         }
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const getTrendingMovies = async () => {
+    try {
+        const movies = await tables.listRows({databaseId: DATABASE_ID, tableId: TABLE_ID, queries: [
+            Query.orderDesc('count'),
+            Query.limit(5)
+            ]})
+        return movies.rows
     } catch (e) {
         console.log(e)
     }
