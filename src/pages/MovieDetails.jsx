@@ -146,7 +146,9 @@ const MovieDetails = () => {
             </div>
 
             {/* Similar Movies */}
-            {similarMovies?.length > 0 && (
+            {loadingSimilarMovies && <Spinner />}
+
+            {!loadingSimilarMovies && similarMovies?.length > 0 && (
                 <section className="mt-16">
                     <div className="mx-auto max-w-[75%]">
                         <h2 className="mb-6">Similar Movies</h2>
@@ -164,9 +166,6 @@ const MovieDetails = () => {
                     </div>
                 </section>
             )}
-
-
-
         </div>
     );
 };
