@@ -10,11 +10,14 @@ import {Link} from "react-router-dom";
 
 function Home() {
     const [searchTerm, setSearchTerm] = useState('')
-    const [errorMessage, setErrorMessage] = useState('')
-    const [movies, setMovies] = useState([])
-    const [loading, setLoading] = useState(false)
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+
+    const [errorMessage, setErrorMessage] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [movies, setMovies] = useState([])
+
     const [trendingMovies, setTrendingMovies] = useState([])
+    const [page, setPage] = useState(1)
 
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
@@ -32,8 +35,15 @@ function Home() {
             try {
                 setLoading(true)
                 setErrorMessage('')
-                const results = await fetchMovies(debouncedSearchTerm)
-                setMovies(results)
+                const results = await fetchMovies(debouncedSearchTerm, page)
+
+                setMovies(prevMovies => {
+                    // Filter out duplicates by movie ID
+                    const newMovies = results.filter(
+                        newMovie => !prevMovies.some(movie => movie.id === newMovie.id)
+                    );
+                    return [...prevMovies, ...newMovies];
+                });
             } catch (error) {
                 console.log("Error fetching movies", error)
                 setErrorMessage('Error fetching movies please try again later')
@@ -43,6 +53,11 @@ function Home() {
         }
 
         loadMovies()
+    }, [debouncedSearchTerm, page])
+
+    useEffect(() => {
+        setMovies([])
+        setPage(1)
     }, [debouncedSearchTerm])
 
     return (<main>
@@ -76,6 +91,10 @@ function Home() {
                     {movies.map(movie => (<MovieCard movie={movie} key={movie.id}/>))}
                 </ul>)}
             </section>
+
+            <button className='home-button mt-10' onClick={() => {setPage(prev => prev + 1)}}>
+                Load more
+            </button>
         </div>
     </main>)
 }
