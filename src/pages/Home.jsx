@@ -3,8 +3,8 @@ import {useEffect, useState} from "react";
 import Spinner from "../components/Spinner.jsx";
 import MovieCard from "../components/MovieCard.jsx";
 import {useDebounce} from "react-use";
-import {fetchMovieById, fetchMovies} from "../api/tmdb.js";
 import {getTrendingMovies} from "../appwrite.js";
+import {fetchMovies} from "../api/tmdb.js";
 
 
 function Home() {
@@ -16,11 +16,6 @@ function Home() {
     const [trendingMovies, setTrendingMovies] = useState([])
 
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
-
-    const handleClick = async (id) => {
-        const movieDetails = await fetchMovieById(id)
-        console.log("movie details", movieDetails)
-    }
 
     useEffect(() => {
         const loadTrending = async () => {
