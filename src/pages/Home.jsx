@@ -13,11 +13,13 @@ function Home() {
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
 
     const [errorMessage, setErrorMessage] = useState('')
-    const [loading, setLoading] = useState(false)
+    const [initialLoading, setInitialLoading] = useState(false)
     const [movies, setMovies] = useState([])
 
     const [trendingMovies, setTrendingMovies] = useState([])
     const [page, setPage] = useState(1)
+
+    const [loadingMore, setLoadingMore] = useState(false)
 
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
@@ -33,7 +35,11 @@ function Home() {
     useEffect(() => {
         const loadMovies = async () => {
             try {
-                setLoading(true)
+                if (page === 1) {
+                    setInitialLoading(true); // first page
+                } else {
+                    setLoadingMore(true); // subsequent pages
+                }
                 setErrorMessage('')
                 const results = await fetchMovies(debouncedSearchTerm, page)
 
@@ -48,7 +54,8 @@ function Home() {
                 console.log("Error fetching movies", error)
                 setErrorMessage('Error fetching movies please try again later')
             } finally {
-                setLoading(false)
+                setInitialLoading(false)
+                setLoadingMore(false)
             }
         }
 
@@ -87,14 +94,28 @@ function Home() {
 
             <section className="all-movies">
                 <h2 className='mt-[40px]'>All movies</h2>
-                {loading ? (<Spinner/>) : errorMessage ? (<p className="text-red-500">{errorMessage}</p>) : (<ul>
-                    {movies.map(movie => (<MovieCard movie={movie} key={movie.id}/>))}
-                </ul>)}
-            </section>
 
-            <button className='home-button mt-10' onClick={() => {setPage(prev => prev + 1)}}>
-                Load more
-            </button>
+                {initialLoading && <Spinner/>}
+                {!initialLoading && errorMessage && <p className="text-red-500">{errorMessage}</p>}
+
+                <ul>
+                    {movies.map(movie => (
+                        <MovieCard movie={movie} key={movie.id}/>
+                    ))}
+                </ul>
+
+                {loadingMore && <Spinner/>}
+
+                {!initialLoading && (
+                    <button
+                        className='home-button mt-10'
+                        onClick={() => setPage(prev => prev + 1)}
+                        disabled={loadingMore}
+                    >
+                        {loadingMore ? 'Loading...' : 'Load more'}
+                    </button>
+                )}
+            </section>
         </div>
     </main>)
 }
