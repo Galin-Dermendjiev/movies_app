@@ -21,6 +21,7 @@ function Home() {
     const [page, setPage] = useState(1)
 
     const [loadingMore, setLoadingMore] = useState(false)
+    const [totalPages, setTotalPages] = useState(5)
 
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
@@ -42,8 +43,8 @@ function Home() {
                     setLoadingMore(true); // subsequent pages
                 }
                 setErrorMessage('')
-                const results = await fetchMovies(debouncedSearchTerm, page)
-
+                const {results, totalPages} = await fetchMovies(debouncedSearchTerm, page)
+                setTotalPages(totalPages)
                 setMovies(prevMovies => {
                     // Filter out duplicates by movie ID
                     const newMovies = results.filter(
@@ -51,6 +52,8 @@ function Home() {
                     );
                     return [...prevMovies, ...newMovies];
                 });
+
+
             } catch (error) {
                 console.log("Error fetching movies", error)
                 setErrorMessage('Error fetching movies please try again later')
@@ -66,6 +69,7 @@ function Home() {
     useEffect(() => {
         setMovies([])
         setPage(1)
+        setTotalPages(1)
     }, [debouncedSearchTerm])
 
     return (<main>
@@ -103,7 +107,7 @@ function Home() {
                     <InfiniteScroll
                         dataLength={movies.length}
                         next={() => setPage(prev => prev + 1)}
-                        hasMore={true} // or calculate based on total pages
+                        hasMore={page < totalPages} // or calculate based on total pages
                         loader={<Spinner />}
                         scrollThreshold={0.8} // trigger at 80% of scroll
                         style={{ overflow: "hidden" }}

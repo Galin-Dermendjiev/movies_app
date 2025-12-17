@@ -27,7 +27,10 @@ export const fetchMovies = async (query = '', page = 1) => {
     if(query && data.results.length > 0){
         await updateSearchCount({searchTerm: query, movie: data.results[0]})
     }
-    return data.results || []
+    return {
+        results: data.results || [],
+        totalPages: data.total_pages
+    }
 }
 
 export const fetchMovieById = async (id) => {
