@@ -18,7 +18,6 @@ function Home() {
     const [trendingMovies, setTrendingMovies] = useState([])
     const [page, setPage] = useState(1)
 
-    const [loadingMore, setLoadingMore] = useState(false)
     const [totalPages, setTotalPages] = useState(5)
 
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
@@ -37,8 +36,6 @@ function Home() {
             try {
                 if (page === 1) {
                     setInitialLoading(true); // first page
-                } else {
-                    setLoadingMore(true); // subsequent pages
                 }
                 setErrorMessage('')
                 const {results, totalPages} = await fetchMovies(debouncedSearchTerm, page)
@@ -57,7 +54,6 @@ function Home() {
                 setErrorMessage('Error fetching movies please try again later')
             } finally {
                 setInitialLoading(false)
-                setLoadingMore(false)
             }
         }
 
