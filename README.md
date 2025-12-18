@@ -40,7 +40,7 @@ A modern movie web application built with **React** and **Vite** that fetches mo
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/react-movie-app.git
+git clone https://github.com/Galin-Dermendjiev/movies_app.git
 cd react-movie-app
 ```
 
