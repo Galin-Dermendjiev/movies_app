@@ -9,6 +9,7 @@ A modern movie web application built with **React** and **Vite** that fetches mo
 - **Home Page**
     - Infinite scrolling for all movies
     - Search functionality to find movies
+    - Search by genre
     - Trending section displaying the top 5 most viewed movies (tracked with **Appwrite**)
 
 - **Movie Details Page**
