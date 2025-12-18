@@ -5,6 +5,7 @@ import Spinner from "../components/Spinner.jsx";
 import {Link} from "react-router-dom";
 import SimilarMoviesSection from "../components/SimilarMoviesSection.jsx";
 import MainMovieContent from "../components/MainMovieContent.jsx";
+import MovieTrailer from "../components/MovieTrailer.jsx";
 
 const MovieDetails = () => {
     const { id } = useParams();
@@ -55,6 +56,8 @@ const MovieDetails = () => {
 
             </div>
             <MainMovieContent movie={movie} />
+
+            <MovieTrailer id={id} />
 
             <SimilarMoviesSection loadingSimilarMovies={loadingSimilarMovies} similarMovies={similarMovies} />
         </div>

@@ -43,6 +43,7 @@ export const fetchMovieById = async (id) => {
     }
 
     const data = await response.json()
+    await fetchMovieTrailer(id)
     return data || []
 }
 
@@ -64,4 +65,24 @@ export const fetchSimilarMovies = async (id) => {
     const data = await response.json()
 
     return data.results || []
+}
+
+export const fetchMovieTrailer = async (id) => {
+    const endpoint = `${API_BASE_URL}/movie/${id}/videos`
+
+    const response = await fetch(endpoint, API_OPTIONS)
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch movie trailer')
+    }
+
+    const data = await response.json()
+    const trailer = data.results.find(
+        (video) =>
+            video.site === 'YouTube' &&
+            video.official &&
+            video.type === 'Trailer'
+    );
+
+    return trailer.key || null
 }
