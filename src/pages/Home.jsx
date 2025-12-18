@@ -70,7 +70,7 @@ function Home() {
         <div className="pattern"/>
         <div className="wrapper">
             <header>
-                <img src='../public/hero-img.png' alt='hero'/>
+                <img src='/hero-img.png' alt='hero'/>
                 <h1>Find <span className="text-gradient">movies</span> you'll enjoy fast and easy</h1>
                 <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
             </header>
