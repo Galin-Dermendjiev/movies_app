@@ -11,7 +11,6 @@ const tables = new TablesDB(client)
 
 export const incrementMovieCount = async ({movie}) => {
     try {
-        console.log(movie)
         const result = await tables.listRows({
             databaseId: DATABASE_ID,
             tableId: TABLE_ID,
