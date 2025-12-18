@@ -20,8 +20,9 @@ function Home() {
 
     const [totalPages, setTotalPages] = useState(5)
 
-    useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
+    const [selectedGenre, setSelectedGenre] = useState('')
 
+    useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
     useEffect(() => {
         const loadTrending = async () => {
             const popularMovies = await getTrendingMovies();
@@ -38,7 +39,7 @@ function Home() {
                     setInitialLoading(true); // first page
                 }
                 setErrorMessage('')
-                const {results, totalPages} = await fetchMovies(debouncedSearchTerm, page)
+                const {results, totalPages} = await fetchMovies(debouncedSearchTerm, page, selectedGenre)
                 setTotalPages(totalPages)
                 setMovies(prevMovies => {
                     // Filter out duplicates by movie ID
@@ -58,13 +59,20 @@ function Home() {
         }
 
         loadMovies()
-    }, [debouncedSearchTerm, page])
+    }, [debouncedSearchTerm, page, selectedGenre])
 
     useEffect(() => {
         setMovies([])
         setPage(1)
         setTotalPages(1)
+        setSelectedGenre('')
     }, [debouncedSearchTerm])
+
+    useEffect(() => {
+        setMovies([])
+        setPage(1)
+        setTotalPages(1)
+    }, [selectedGenre])
 
     return (<main>
         <div className="pattern"/>
@@ -82,7 +90,10 @@ function Home() {
                        setPage={setPage}
                        totalPages={totalPages}
                        errorMessage={errorMessage}
-                       initialLoading={initialLoading}/>
+                       initialLoading={initialLoading}
+                       selectedGenre={selectedGenre}
+                       setSelectedGenre={setSelectedGenre}
+                       debouncedSearchTerm={debouncedSearchTerm}/>
         </div>
     </main>)
 }

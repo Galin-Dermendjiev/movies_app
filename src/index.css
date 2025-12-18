@@ -258,4 +258,17 @@
     .movie-homepage {
         @apply mt-6 inline-block bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-md font-semibold transition;
     }
+
+    .genre-dropdown {
+        @apply text-gray-100
+        bg-dark-100
+        border border-light-100/20
+        rounded-lg
+        px-4 py-2
+        focus:outline-none
+        focus:ring-2 focus:ring-light-100
+        focus:border-light-100
+        transition duration-150 ease-in-out
+        cursor-pointer h-10;
+    }
 }

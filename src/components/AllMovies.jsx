@@ -2,11 +2,15 @@ import React from 'react'
 import InfiniteScroll from "react-infinite-scroll-component";
 import Spinner from "./Spinner.jsx";
 import MovieCard from "./MovieCard.jsx";
+import GenreDropdown from "./GenreDropdown.jsx";
 
-const AllMovies = ({initialLoading, errorMessage, movies, setPage, page, totalPages}) => {
+const AllMovies = ({initialLoading, errorMessage, movies, setPage, page, totalPages, selectedGenre, setSelectedGenre, debouncedSearchTerm}) => {
     return (
         <section className="all-movies">
-            <h2 className='mt-[40px]'>All movies</h2>
+            <div className="flex items-center  gap-5">
+                <h2 >All movies</h2>
+                {!debouncedSearchTerm && <GenreDropdown selectedGenre={selectedGenre} setSelectedGenre={setSelectedGenre}/>}
+            </div>
 
             {initialLoading && <Spinner/>}
             {!initialLoading && errorMessage && <p className="text-red-500">{errorMessage}</p>}

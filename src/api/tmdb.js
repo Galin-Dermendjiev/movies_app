@@ -9,10 +9,14 @@ const API_OPTIONS = {
     },
 }
 
-export const fetchMovies = async (query = '', page = 1) => {
-    const endpoint = query
+export const fetchMovies = async (query = '', page = 1, genre= '') => {
+    let endpoint = query
         ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${page}`
         : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&page=${page}`
+
+    if(genre !== ''){
+        endpoint += `&with_genres=${genre}`
+    }
 
     const response = await fetch(endpoint, API_OPTIONS)
 
