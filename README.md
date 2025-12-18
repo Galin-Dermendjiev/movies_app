@@ -2,6 +2,8 @@
 
 A modern movie web application built with **React** and **Vite** that fetches movies from **TMDB API**. Users can browse, search, and explore movies, view trailers, and discover trending movies based on user interactions.
 
+### View live: https://movies-app-mu-fawn.vercel.app/
+
 ## Features
 
 - **Home Page**
