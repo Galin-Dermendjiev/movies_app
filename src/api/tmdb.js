@@ -1,5 +1,3 @@
-import {updateSearchCount} from "../appwrite.js";
-
 const API_BASE_URL = 'https://api.themoviedb.org/3'
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY
 
@@ -24,9 +22,6 @@ export const fetchMovies = async (query = '', page = 1) => {
 
     const data = await response.json()
 
-    if(query && data.results.length > 0){
-        await updateSearchCount({searchTerm: query, movie: data.results[0]})
-    }
     return {
         results: data.results || [],
         totalPages: data.total_pages
@@ -43,7 +38,6 @@ export const fetchMovieById = async (id) => {
     }
 
     const data = await response.json()
-    await fetchMovieTrailer(id)
     return data || []
 }
 

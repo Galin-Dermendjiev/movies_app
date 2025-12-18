@@ -7,7 +7,6 @@ const MovieTrailer = ({id}) => {
     useEffect(() => {
         const loadTrailer = async () => {
             const key = await fetchMovieTrailer(id)
-            console.log(key)
             if (key) setTrailerKey(key);
         };
 
